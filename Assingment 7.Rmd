@@ -1,0 +1,33 @@
+---
+title: "Assignment 7"
+output: html_document
+date: "2025-12-3"
+Author: "Eshan Patel"
+---
+
+```{r}
+library(fpp2)
+library(forecast)
+ts_Lebron <- read.csv("~/Practice/Lebron-Monthly-Worldwide.csv")
+ts_Lebron$values <- ts_Lebron$value 
+ts_Lebron <- ts(ts_Lebron$values,start=c(2020,01),frequency=12)
+ts_Lebron
+plot(ts_Lebron)
+ndiffs(ts_Lebron)
+tsdisplay(ts_Lebron)
+ts_Lebrondiff1 <- diff(ts_Lebron, differences=1)
+plot(ts_Lebrondiff1)
+tsdisplay(ts_Lebrondiff1)
+auto_fit <- auto.arima(ts_Lebron, trace=TRUE, stepwise = FALSE)
+auto_fit
+attributes(auto_fit)
+plot(forecast(auto_fit,h=5,level=c(99.5)))
+
+#Residual Analysis
+Acf(auto_fit$residuals)
+Box.test(residuals(auto_fit), lag=20, type="Ljung")
+plot.ts(residuals(auto_fit))
+hist(auto_fit$residuals)
+tsdiag(auto_fit)
+accuracy(auto_fit)
+```
